@@ -61,13 +61,22 @@ public class FileServiceImpl implements FileService {
             fileInfoDO = dirDetail(filePath, null);
         }
 
-        UploadingFileDTO fileDTO = new UploadingFileDTO.Builder((String) p.get("fileName"), (Long) p.get("fileSize"),
-                (String) p.get("fileContentType"), (String) p.get("pathName"), (String) p.get("dirId")).setId(b.getString("id")).build();
-
 
         return null;
     }
 
+   /**
+    * <per>
+    * <p>根据 filePath ，version 获取目录详情  </p>
+    * <per/>
+    * @param filePath
+    * @param version_
+    * @return com.liruilong.fileserver.fserve.domain.FileInfoDO
+    * @throws
+    * @Description : TODO According file Path, version for catalog details
+    * @author Liruilong
+    * @Date 2020/9/19 19:51
+    **/
     @Override
     public FileInfoDO dirDetail(String filePath, Integer version_) {
         return null;
@@ -82,7 +91,7 @@ public class FileServiceImpl implements FileService {
      * @param fileDO
      * @return java.util.List
      * @throws
-     * @Description : TODO 构建文件路径
+     * @Description : TODO Build file path
      * @author Liruilong
      * @Date 2020/9/15 14:02
      **/
@@ -144,7 +153,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * <per>
-     * <p>文件上传</p>
+     * <p>文件上传（非断点）</p>
      * <per/>
      *
      * @param request
@@ -152,13 +161,13 @@ public class FileServiceImpl implements FileService {
      * @param b
      * @return java.lang.Object
      * @throws
-     * @Description : TODO 文件上传
+     * @Description : TODO File upload (non-breakpoint)
      * @author Liruilong
      * @Date 2020/9/17 19:42
      **/
     @Override
     @MethodsLog(operType = FileCRUDEnum.CREATE,remark = "文件上传（非断点）",paramData ="" )
-    public Object uploadFile(DefaultMultipartHttpServletRequest request, HttpServletResponse response, boolean b) {
+    public Object uploadFile(DefaultMultipartHttpServletRequest request, HttpServletResponse response, boolean isUseGridFS) {
 
         // 断点续传的处理
         if (StringUtils.isNotBlank(request.getHeader("RANGE"))){
@@ -166,32 +175,59 @@ public class FileServiceImpl implements FileService {
         }
         Map<String, String[]> parameterMap = request.getParameterMap();
         // 初始化上传对象
+        UploadingFileDTO.Builder builder = new UploadingFileDTO.Builder("");
         if (getUploadFileNum(request) == 1){
             // 获取文件的ID和MD5 只针对单文件处理
+            builder.setId("").setMd5("");
         }
+        /*
+        目录 锁处理
+         */
+        Iterator<String> fileNames = request.getFileMap().keySet().iterator();
+        List<FileInfoDO> list = new LinkedList<>();
+        UploadingFileDTO uploadingFileDTO = builder.build();
+        while (fileNames.hasNext()){
+            List<MultipartFile> requestFiles = request.getFiles(fileNames.next());
 
-        // 目录 锁处理
+           /*
+           文件合规验证
+            */
+            for (MultipartFile multipartFile : requestFiles) {
+                /*
+                文件存储对象
+                 */
+                FileInfoDO fileInfoDO = new FileInfoDO().setUseGridFS(isUseGridFS).setFileId(UUIDUtil.builder());
+                /*
+                文件对象
+                 */
+                FileDO fileDO = new FileDO().setFileId(UUIDUtil.PreviousUUID());
+
+                String tempDirPath = "";
 
 
+            }
 
-
-
+        }
         return null;
     }
 
-    /**
-     * @param request
-     * @return
-     * @description : TODO Gets the number of uploaded files
-     * @author Liruilong
-     * @date  2020年09月19日  18:09:41
-     **/
-    private long getUploadFileNum(DefaultMultipartHttpServletRequest request) {
 
-        Iterator<String> it = request.getFileMap().keySet().iterator();
+  /**
+   * <per>
+   * <p>获取上传文件个数</p>
+   * <per/>
+   * @param request
+   * @return long
+   * @throws
+   * @Description : TODO Gets the number of uploaded files
+   * @author Liruilong
+   * @Date 2020/9/19 19:56
+   **/
+    private long getUploadFileNum(DefaultMultipartHttpServletRequest request) {
+        Iterator<String> fileNames = request.getFileMap().keySet().iterator();
         long fileNum = 0L;
-        while (it.hasNext()) {
-            String s = it.next();
+        while (fileNames.hasNext()) {
+            String s = fileNames.next();
             fileNum += request.getFiles(s).stream().filter(o -> Objects.nonNull(o) && StringUtils.isNoneBlank(o.getOriginalFilename()))
                     .count();
         }

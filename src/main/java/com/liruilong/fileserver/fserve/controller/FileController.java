@@ -61,14 +61,14 @@ public class FileController {
 
     /**
      * <per>
-     * <p>文件上传</p>
+     * <p>文件上传（非断点）</p>
      * <per/>
      *
      * @param request
      * @param response
      * @return java.lang.Object
      * @throws
-     * @Description : TODO 文件上传
+     * @Description : TODO File upload (non-breakpoint)
      * @author Liruilong
      * @Date 2020/9/17 19:43
      **/

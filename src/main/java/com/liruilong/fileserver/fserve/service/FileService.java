@@ -80,7 +80,7 @@ public interface FileService {
 
     /**
      * <per>
-     * <p>文件上传</p>
+     * <p>文件上传（非断点）</p>
      * <per/>
      *
      * @param request
@@ -88,7 +88,7 @@ public interface FileService {
      * @param b
      * @return java.lang.Object
      * @throws
-     * @Description : TODO 文件上传
+     * @Description : TODO TODO File upload (non-breakpoint)
      * @author Liruilong
      * @Date 2020/9/17 19:43
      **/
