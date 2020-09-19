@@ -30,6 +30,7 @@ public class OperateLogServiceImpl implements OperateLogService {
 
     @Override
     public void saveOperateLog(OperateLog operateLog) {
+
         operateLogMapper.insertSelective(operateLog);
     }
 

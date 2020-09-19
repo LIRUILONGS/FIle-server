@@ -159,6 +159,17 @@ public class FileServiceImpl implements FileService {
     @MethodsLog(operType = FileCRUDEnum.CREATE,remark = "文件上传（非断点）",paramData ="" )
     public Object uploadFile(DefaultMultipartHttpServletRequest request, HttpServletResponse response, boolean b) {
 
+
+
+        // 断点续传的处理
+        ;
+        if (StringUtils.isNotBlank(request.getHeader("RANGE"))){
+            // 到断点续传
+        }
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        // 初始化上传对象
+
+
         return null;
     }
 
