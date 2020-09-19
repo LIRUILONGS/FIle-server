@@ -183,7 +183,7 @@ public class FileUtil {
      * @Date 2020年08月14日  13:08:36
      **/
     public static void cleanUtil(Object o) {
-        exceptionUtil((file) -> {
+        exceptionUtilNo((file) -> {
             cleanUtil((File) file);
         }, "删除目录为空！", Objects.requireNonNull(o) instanceof String ? new File((String) o) : o);
     }
@@ -200,7 +200,7 @@ public class FileUtil {
      * @Date 2020年08月12日  18:08:43
      **/
     public static void makeDirUtil(String pathName) {
-        exceptionUtil((fileName) -> {
+        exceptionUtilNo((fileName) -> {
             File file = new File((String) fileName);
             if (!file.exists()) {
                 file.mkdirs();
@@ -313,7 +313,7 @@ public class FileUtil {
      * @Date 2020年08月14日  14:08:02
      **/
     public static void clearFileUtil(Object o) {
-        exceptionUtil((file) -> {
+        exceptionUtilNo((file) -> {
             cleanDirectory(Objects.requireNonNull(file, "参数为空") instanceof String ? new File((String) file) : (File) file);
         }, "清空文件夹异常", o);
 

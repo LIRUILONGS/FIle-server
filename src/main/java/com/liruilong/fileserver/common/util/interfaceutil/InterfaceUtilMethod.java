@@ -37,7 +37,7 @@ public class InterfaceUtilMethod<T> {
      * @author Liruilong
      * @Date 2020年08月13日  09:08:21
      **/
-    public static void exceptionUtil(ExceptionInterfaceV exceptionInterface, String msg, Object o) {
+    public static void exceptionUtilNo(ExceptionInterfaceV exceptionInterface, String msg, Object o) {
         try {
             exceptionInterface.exceptionUtil(o);
         } catch (Exception e) {
