@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
@@ -159,19 +160,44 @@ public class FileServiceImpl implements FileService {
     @MethodsLog(operType = FileCRUDEnum.CREATE,remark = "文件上传（非断点）",paramData ="" )
     public Object uploadFile(DefaultMultipartHttpServletRequest request, HttpServletResponse response, boolean b) {
 
-
-
         // 断点续传的处理
-        ;
         if (StringUtils.isNotBlank(request.getHeader("RANGE"))){
             // 到断点续传
         }
         Map<String, String[]> parameterMap = request.getParameterMap();
         // 初始化上传对象
+        if (getUploadFileNum(request) == 1){
+            // 获取文件的ID和MD5 只针对单文件处理
+        }
+
+        // 目录 锁处理
+
+
+
 
 
         return null;
     }
+
+    /**
+     * @param request
+     * @return
+     * @description : TODO Gets the number of uploaded files
+     * @author Liruilong
+     * @date  2020年09月19日  18:09:41
+     **/
+    private long getUploadFileNum(DefaultMultipartHttpServletRequest request) {
+
+        Iterator<String> it = request.getFileMap().keySet().iterator();
+        long fileNum = 0L;
+        while (it.hasNext()) {
+            String s = it.next();
+            fileNum += request.getFiles(s).stream().filter(o -> Objects.nonNull(o) && StringUtils.isNoneBlank(o.getOriginalFilename()))
+                    .count();
+        }
+        return fileNum;
+    }
+
 
 
     @Override
