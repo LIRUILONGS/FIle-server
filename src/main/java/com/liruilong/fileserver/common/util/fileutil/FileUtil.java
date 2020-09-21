@@ -66,14 +66,16 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static String getMD5(File file) {
+
+    public static String getMD5(Object o) {
         String s = null;
+
         s = exceptionUtil((f) -> {
-            try (InputStream inputStream = new FileInputStream((File) f)) {
+            try (InputStream inputStream = o instanceof File ? new FileInputStream((File) f):(InputStream)f) {
                 String md5DigestAsHex = DigestUtils.md5DigestAsHex(inputStream);
                 return md5DigestAsHex;
             }
-        }, "获取Md5失败", file).toString();
+        }, "获取Md5失败", o).toString();
         return s;
     }
 

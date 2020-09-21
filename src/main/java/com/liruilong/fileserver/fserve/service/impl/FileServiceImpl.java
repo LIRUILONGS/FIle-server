@@ -6,6 +6,7 @@ import com.liruilong.fileserver.common.aop.MethodsLog;
 import com.liruilong.fileserver.common.exception.ErrorCode;
 import com.liruilong.fileserver.common.exception.FileServiceException;
 import com.liruilong.fileserver.common.util.UUIDUtil;
+import com.liruilong.fileserver.common.util.fileutil.FileUtil;
 import com.liruilong.fileserver.fserve.domain.FileContants;
 import com.liruilong.fileserver.fserve.domain.FileDO;
 import com.liruilong.fileserver.fserve.domain.FileInfoDO;
@@ -218,8 +219,7 @@ public class FileServiceImpl implements FileService {
                 if (StringUtils.isBlank(uploadingFileDTO.getMd5())){
                    String s = (String)  exceptionUtil( () -> {
                        InputStream inputStream = multipartFile.getInputStream();
-                       inputStream.
-
+                       return FileUtil.getMD5(inputStream);
                    },"上传文件数据异常");
 
                 }
