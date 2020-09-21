@@ -11,6 +11,7 @@ public class FileNameUtil {
 
 
     private FileNameUtil() {
+        throw new AssertionError();
     }
 
     /**

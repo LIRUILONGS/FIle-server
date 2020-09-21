@@ -11,6 +11,7 @@ import java.util.Objects;
  */
 public class UUIDUtil {
     private UUIDUtil() {
+        throw new AssertionError();
     }
     private static  String PreviousUUID;
 

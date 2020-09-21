@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 public  class DateUtil {
 
     private DateUtil() {
+        throw new AssertionError();
     }
 
     public static Timestamp builder(){

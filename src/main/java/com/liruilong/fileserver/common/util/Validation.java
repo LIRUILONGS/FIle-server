@@ -17,6 +17,9 @@ import java.util.regex.Pattern;
 public class Validation {
 
 
+    private Validation(){
+        throw new AssertionError();
+    }
     //------------------常量定义
     /**
      * Email正则表达式="^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
