@@ -23,9 +23,11 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 
 import static com.liruilong.fileserver.common.util.interfaceutil.InterfaceUtilMethod.exceptionUtil;
+import static com.liruilong.fileserver.common.util.interfaceutil.InterfaceUtilMethod.exceptionUtils;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 
@@ -40,6 +42,10 @@ public class FileServiceImpl implements FileService {
 
     @Autowired(required=false)
     private MongoTemplate mongoTemplate;
+
+    //使用GridFS的最小文件大小（16M）
+    static final long GRIDFS_LOW_SIZE = 16*1048576;
+
 
     @Override
     public FileInfoDO breakingPointSupervention(BasicDBObject b) {
@@ -204,6 +210,19 @@ public class FileServiceImpl implements FileService {
 
                 String tempDirPath = "";
 
+                long fileSize = multipartFile.getSize();
+                fileInfoDO.setFileSize(fileSize);
+                if (fileSize > GRIDFS_LOW_SIZE){
+                    fileInfoDO.setUseGridFS(true);
+                }
+                if (StringUtils.isBlank(uploadingFileDTO.getMd5())){
+                   String s = (String)  exceptionUtil( () -> {
+                       InputStream inputStream = multipartFile.getInputStream();
+                       inputStream.
+
+                   },"上传文件数据异常");
+
+                }
 
             }
 

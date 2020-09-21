@@ -71,7 +71,7 @@ public class InterfaceUtilMethod<T> {
     /**
      * <per>
      * <p>没有返回值的异常处理（多参数）</p>
-     *
+     *<p>用于参数处理<p/>
      * <per/>
      *
      * @param exceptionInterface
@@ -97,7 +97,7 @@ public class InterfaceUtilMethod<T> {
 
     /**
      * <per>
-     * <p>有返回值的异常处理</p>
+     * <p>有返回值的异常处理(多参数处理)</p>
      * <p>多参数处理</p>
      * <per/>
      *
@@ -106,7 +106,7 @@ public class InterfaceUtilMethod<T> {
      * @param o
      * @return void
      * @throws
-     * @Description
+     * @Description todo Returns a value exception processing (Processing multi-parameter)
      * @author Liruilong
      * @Date 2020年08月13日  09:08:21
      **/
@@ -124,7 +124,7 @@ public class InterfaceUtilMethod<T> {
 
     /**
      * <per>
-     * <p>有返回值的异常处理</p>
+     * <p>有返回值的异常处理（单参数）</p>
      * <per/>
      *
      * @param exceptionInterface
@@ -132,7 +132,7 @@ public class InterfaceUtilMethod<T> {
      * @param o
      * @return void
      * @throws
-     * @Description
+     * @Description todo Exception handler returns a value (one-parameter)
      * @author Liruilong
      * @Date 2020年08月13日  09:08:21
      **/
@@ -146,6 +146,32 @@ public class InterfaceUtilMethod<T> {
         }
         return old;
     }
+
+    /**
+     * <per>
+     * <p>处理没有参数有返回值的异常处理，</p>
+     * <per/>
+     *
+     * @param exceptionInterfaceVs
+     * @param msg
+     * @return java.lang.Object
+     * @throws
+     * @Description : TODO There is no process parameters exception handler return values
+     * @author Liruilong
+     * @Date 2020/9/21 20:26
+     **/
+    public static Object exceptionUtil(ExceptionInterfaceVs exceptionInterfaceVs, String msg) {
+        Object old = null;
+        try {
+            old = exceptionInterfaceVs.exceptionUtil();
+        } catch (Exception e) {
+            logger.info(msg);
+            e.printStackTrace();
+        }
+        return old;
+    }
+
+
 
 
     /**
