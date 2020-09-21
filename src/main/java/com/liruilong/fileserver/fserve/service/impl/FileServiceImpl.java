@@ -7,10 +7,7 @@ import com.liruilong.fileserver.common.exception.ErrorCode;
 import com.liruilong.fileserver.common.exception.FileServiceException;
 import com.liruilong.fileserver.common.util.UUIDUtil;
 import com.liruilong.fileserver.common.util.fileutil.FileUtil;
-import com.liruilong.fileserver.fserve.domain.FileContants;
-import com.liruilong.fileserver.fserve.domain.FileDO;
-import com.liruilong.fileserver.fserve.domain.FileInfoDO;
-import com.liruilong.fileserver.fserve.domain.UploadingFileDTO;
+import com.liruilong.fileserver.fserve.domain.*;
 import com.liruilong.fileserver.fserve.service.FileService;
 import com.mongodb.BasicDBObject;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +24,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 
+import static com.liruilong.fileserver.common.util.fileutil.FileUtil.fileReadByteUtil;
 import static com.liruilong.fileserver.common.util.interfaceutil.InterfaceUtilMethod.exceptionUtil;
 import static com.liruilong.fileserver.common.util.interfaceutil.InterfaceUtilMethod.exceptionUtils;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -165,7 +163,7 @@ public class FileServiceImpl implements FileService {
      *
      * @param request
      * @param response
-     * @param b
+     * @param isUseGridFS
      * @return java.lang.Object
      * @throws
      * @Description : TODO File upload (non-breakpoint)
@@ -192,7 +190,7 @@ public class FileServiceImpl implements FileService {
          */
         Iterator<String> fileNames = request.getFileMap().keySet().iterator();
         List<FileInfoDO> list = new LinkedList<>();
-        UploadingFileDTO uploadingFileDTO = builder.build();
+
         while (fileNames.hasNext()){
             List<MultipartFile> requestFiles = request.getFiles(fileNames.next());
 
@@ -207,7 +205,7 @@ public class FileServiceImpl implements FileService {
                 /*
                 文件对象
                  */
-                FileDO fileDO = new FileDO().setFileId(UUIDUtil.PreviousUUID());
+                FileContentsDO.Builder builderFileContentsDO=  new FileContentsDO.Builder().setId(UUIDUtil.PreviousUUID());
 
                 String tempDirPath = "";
 
@@ -216,12 +214,33 @@ public class FileServiceImpl implements FileService {
                 if (fileSize > GRIDFS_LOW_SIZE){
                     fileInfoDO.setUseGridFS(true);
                 }
-                if (StringUtils.isBlank(uploadingFileDTO.getMd5())){
+                if (StringUtils.isBlank(builder.getMd5())){
                    String s = (String)  exceptionUtil( () -> {
                        InputStream inputStream = multipartFile.getInputStream();
                        return FileUtil.getMD5(inputStream);
                    },"上传文件数据异常");
+                  builder.setMd5(s);
 
+                }
+                UploadingFileDTO uploadingFileDTO = builder.build();
+                fileInfoDO.setMd5(uploadingFileDTO.getMd5());
+
+                /**
+                * 判断MD5是否存在
+                 **/
+
+                if (fileInfoDO.isUseGridFS()){
+                    saveFileUseGridFS(fileInfoDO,multipartFile);
+                }else {
+                   exceptionUtil(() ->builderFileContentsDO.setFileContent(fileReadByteUtil(multipartFile.getInputStream())),"上传文件数据异常");
+                   mongoTemplate.save(builderFileContentsDO.buide());
+                }
+                if (StringUtils.isBlank(uploadingFileDTO.getId())){
+                    if (StringUtils.isNotBlank(uploadingFileDTO.getDirId())){
+
+                    }
+                }else {
+                    // 更新
                 }
 
             }
@@ -230,8 +249,11 @@ public class FileServiceImpl implements FileService {
         return null;
     }
 
+    private void saveFileUseGridFS(FileInfoDO fileInfoDO, MultipartFile multipartFile) {
+    }
 
-  /**
+
+    /**
    * <per>
    * <p>获取上传文件个数</p>
    * <per/>

@@ -92,7 +92,37 @@ public class UploadingFileDTO {
             return this;
         }
 
+        public String getId() {
+            return id;
+        }
 
+        public String getMd5() {
+            return md5;
+        }
+
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public Long getFileSize() {
+            return fileSize;
+        }
+
+        public String getFileContentType() {
+            return fileContentType;
+        }
+
+        public String getPathName() {
+            return pathName;
+        }
+
+        public String getDirId() {
+            return dirId;
+        }
     }
 
     public String getId() {
