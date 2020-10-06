@@ -47,18 +47,18 @@ public class FileLogAspect {
 
     @Before("pointCut()")
     public void doBefore(JoinPoint joinPoint) {
-        handleLog(joinPoint, "--->[begin!]",0);
+       new Thread(() -> handleLog(joinPoint, "--->[begin!]",0)).start();
     }
 
     @AfterReturning("pointCut()")
     public void doAfterReturning(JoinPoint joinPoint) {
-        handleLog(joinPoint, "--->[finish!]",0);
+     new Thread(() -> handleLog(joinPoint, "--->[finish!]",0)).start();
     }
 
 
     @AfterThrowing(value = "pointCut()", throwing = "errorMsg")
     public void afterThrowException(JoinPoint joinpoint, Exception errorMsg) {
-        handleLog(joinpoint, "--->[Exception!]",1);
+       new Thread(()-> handleLog(joinpoint, "--->[Exception!]",1)).start();
     }
 
 
@@ -86,11 +86,11 @@ public class FileLogAspect {
         }
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getName();
-        OperateLog operateLog = new OperateLog().setId(UUIDUtil.builder()).setModule("普通文件上传")
-                .setRemark(loggerAnnotation.remark()+":"+ Arrays.toString(joinPoint.getArgs()))
+        OperateLog operateLog = new OperateLog().setId(UUIDUtil.builder()).setModule(loggerAnnotation.remark())
+                .setRemark(o[0] +":"+ Arrays.toString(joinPoint.getArgs()))
                 .setClassName(className).setMethod(methodName).setIp(ipAddr).setOperType(loggerAnnotation.operType().getName())
-                .setCreateTime(DateUtil.builder()).setUserId("123").setUserName("小明").setStatus((Integer) (o[1]))
-                ;
+                .setCreateTime(DateUtil.builder()).setUserId("123").setUserName("小明").setStatus((Integer) (o[1]));
+
         operateLogService.saveOperateLog(operateLog);
 
     }

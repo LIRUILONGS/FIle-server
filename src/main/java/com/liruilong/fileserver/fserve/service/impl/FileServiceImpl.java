@@ -10,12 +10,14 @@ import com.liruilong.fileserver.common.util.fileutil.FileUtil;
 import com.liruilong.fileserver.fserve.domain.*;
 import com.liruilong.fileserver.fserve.service.FileService;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
@@ -101,34 +103,35 @@ public class FileServiceImpl implements FileService {
      * @Date 2020/9/15 14:02
      **/
     @Override
+    @Transactional
     @MethodsLog(operType = FileCRUDEnum.CREATE,remark = "构建文件夹",paramData = "fileDO")
     public List<FileInfoDO> mkdir(final FileDO fileDO) {
-        String pathname = fileDO.getPathname();
+        String pathname = fileDO.getPathName();
         // 参数为空校验
         checkoutNull(pathname);
         // 参数格式校验
 
+        // 目录分片，判断根目录是否存在。
         String[] dirNameArr = pathname.split(FileContants.SPLIT_SIGN);
         int size = dirNameArr.length;
         List<FileInfoDO> arrayList = new ArrayList<>(size);
         StringBuilder path = new StringBuilder(FileContants.SPLIT_TOKEN_SIGN);
         List pathList = new ArrayList();
         List nameList = new ArrayList();
-        // 构建的时候需要一层层构建
+        // 构建的时候需要一层层构建，有父层到子层。
         for (int i = 0; i < size; i++) {
             if (StringUtils.isBlank(dirNameArr[i])){
                 continue;
             }
             FileInfoDO fileInfoDO = new  FileInfoDO().setAbstractFileId(UUIDUtil.builder())
                     .setFileName(dirNameArr[i]).setVersion_(FileContants.VSERSION_1)
-                    .setContentType(FileContants.FILE_TYPE_DIR).setAbstractFileId(UUIDUtil.builder())
-                    .setPath(path.toString());
-
+                    .setContentType(FileContants.FILE_TYPE_DIR).setPath(path.toString());
             path.append(dirNameArr[i]).append(FileContants.SPLIT_SIGN);
             arrayList.add(0,fileInfoDO);
             pathList.add(fileInfoDO.getPath());
             nameList.add(fileInfoDO.getFileName());
         }
+        // 查询条件构建
         Query query = new Query();
         query.addCriteria(where("path").in(pathList).and("fileName").in(nameList).and("lock_state").is(FileContants.LOCK_STATE));
         // 判断目录是否存在锁定
@@ -142,7 +145,6 @@ public class FileServiceImpl implements FileService {
                 }
             }
         }
-        arrayList.stream().forEach(System.out::print);
         mongoTemplate.insertAll(arrayList);
 
         if (!arrayList.isEmpty()){
@@ -160,7 +162,6 @@ public class FileServiceImpl implements FileService {
      * <per>
      * <p>文件上传（非断点）</p>
      * <per/>
-     *
      * @param request
      * @param response
      * @param isUseGridFS
@@ -173,7 +174,6 @@ public class FileServiceImpl implements FileService {
     @Override
     @MethodsLog(operType = FileCRUDEnum.CREATE,remark = "文件上传（非断点）",paramData ="" )
     public Object uploadFile(DefaultMultipartHttpServletRequest request, HttpServletResponse response, boolean isUseGridFS) {
-
         // 断点续传的处理
         if (StringUtils.isNotBlank(request.getHeader("RANGE"))){
             // 到断点续传
@@ -249,7 +249,10 @@ public class FileServiceImpl implements FileService {
         return null;
     }
 
-    private void saveFileUseGridFS(FileInfoDO fileInfoDO, MultipartFile multipartFile) {
+    private boolean saveFileUseGridFS(FileInfoDO fileInfoDO, MultipartFile multipartFile) {
+
+
+        return true;
     }
 
 
@@ -294,13 +297,13 @@ public class FileServiceImpl implements FileService {
      * @param param
      * @return void
      * @throws
-     * @Description : TODO 参数校验
+     * @Description : TODO 参数校验(Service层参数校验)
      * @author Liruilong
      * @Date 2020/9/15 14:11
      **/
     public static void checkoutNull(Object... param){
         for (Object o : param) {
-            exceptionUtil(() -> o, "参数为空异常!", ErrorCode.ParameterEmpty);
+            exceptionUtil(() -> o, "参数为空异常!"+o.toString(), ErrorCode.ParameterEmpty);
         }
     }
 

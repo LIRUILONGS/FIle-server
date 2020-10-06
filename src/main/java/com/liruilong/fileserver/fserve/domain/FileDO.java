@@ -13,7 +13,7 @@ public class FileDO {
 
     private String tagDirId;
 
-    private String pathname;
+    private String pathName;
 
     private String newFileName;
 
@@ -35,12 +35,12 @@ public class FileDO {
         return this;
     }
 
-    public String getPathname() {
-        return pathname;
+    public String getPathName() {
+        return pathName;
     }
 
-    public FileDO setPathname(String pathname) {
-        this.pathname = pathname;
+    public FileDO setPathName(String pathName) {
+        this.pathName = pathName;
         return this;
     }
 
@@ -58,7 +58,7 @@ public class FileDO {
         return "FileDO{" +
                 "fileId='" + fileId + '\'' +
                 ", tagDirId='" + tagDirId + '\'' +
-                ", pathname='" + pathname + '\'' +
+                ", pathname='" + pathName + '\'' +
                 ", newFileName='" + newFileName + '\'' +
                 '}';
     }

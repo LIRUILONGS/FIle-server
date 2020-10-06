@@ -87,8 +87,8 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-com.liruilong.fileserver.test</artifactId>
+            <scope>com.liruilong.fileserver.test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.junit.vintage</groupId>

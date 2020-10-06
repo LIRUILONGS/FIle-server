@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.logging.Logger;
 
 /**
  * <p>文件信息实体<p/>
@@ -43,7 +44,7 @@ public class FileInfoDO implements Serializable {
     private   String fileName;
     @PropertyDesc("扩展名")
     private   String extension;
-    @PropertyDesc("文件类型")
+    @PropertyDesc("文件类型(0,目录，1,文件)")
     private   String contentType;
     @PropertyDesc("文件大小")
     private   Long fileSize;
@@ -335,33 +336,37 @@ public class FileInfoDO implements Serializable {
 
     @Override
     public String toString() {
-        return "FileInfoDO{" +
-                "abstractFileId='" + abstractFileId + '\'' +
-                ", id='" + id + '\'' +
-                ", createUser='" + createUser + '\'' +
-                ", updateUser='" + updateUser + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", fileId='" + fileId + '\'' +
-                ", groupId='" + groupId + '\'' +
-                ", fileName='" + fileName + '\'' +
-                ", extension='" + extension + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", fileSize=" + fileSize +
-                ", md5='" + md5 + '\'' +
-                ", fileLastModified=" + fileLastModified +
-                ", useGridFS=" + useGridFS +
-                ", photoTime=" + photoTime +
-                ", targetField='" + targetField + '\'' +
-                ", targetTable='" + targetTable + '\'' +
-                ", remark='" + remark + '\'' +
-                ", path='" + path + '\'' +
-                ", lock_state='" + lock_state + '\'' +
-                ", lockUpSign='" + lockUpSign + '\'' +
-                ", lockDate=" + lockDate +
-                ", fileState=" + fileState +
-                ", tenantId='" + tenantId + '\'' +
-                ", version_=" + version_ +
-                '}';
+         Logger l = Logger.getLogger(FileInfoDO.class.getCanonicalName());
+         String s = "FileInfoDO{" +
+                 "abstractFileId='" + abstractFileId + '\'' +
+                 ", id='" + id + '\'' +
+                 ", createUser='" + createUser + '\'' +
+                 ", updateUser='" + updateUser + '\'' +
+                 ", createTime=" + createTime +
+                 ", updateTime=" + updateTime +
+                 ", fileId='" + fileId + '\'' +
+                 ", groupId='" + groupId + '\'' +
+                 ", fileName='" + fileName + '\'' +
+                 ", extension='" + extension + '\'' +
+                 ", contentType='" + contentType + '\'' +
+                 ", fileSize=" + fileSize +
+                 ", md5='" + md5 + '\'' +
+                 ", fileLastModified=" + fileLastModified +
+                 ", useGridFS=" + useGridFS +
+                 ", photoTime=" + photoTime +
+                 ", targetField='" + targetField + '\'' +
+                 ", targetTable='" + targetTable + '\'' +
+                 ", remark='" + remark + '\'' +
+                 ", path='" + path + '\'' +
+                 ", lock_state='" + lock_state + '\'' +
+                 ", lockUpSign='" + lockUpSign + '\'' +
+                 ", lockDate=" + lockDate +
+                 ", fileState=" + fileState +
+                 ", tenantId='" + tenantId + '\'' +
+                 ", version_=" + version_ +
+                 '}';
+         l.info(s);
+        return s;
     }
+
 }

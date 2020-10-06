@@ -32,12 +32,6 @@ public class FileController {
     public static final Logger log = LoggerFactory.getLogger(FileController.class);
     @Autowired
     private FileService fileService;
-
-
-
-
-
-
     /**
      * <per>
      * <p>构建目录</p>
@@ -45,19 +39,16 @@ public class FileController {
      * @param fileDO
      * @return com.liruilong.fileserver.fserve.domain.ResponseDTO
      * @throws
-     * @Description : TODO
+     * @Description : TODO bulid File dir
      * @author Liruilong
      * @Date 2020/9/15 13:57
      **/
     @PostMapping("/mkdir")
     public ResponseDTO mkdir(@RequestBody FileDO fileDO){
         List<FileInfoDO> list = fileService.mkdir(fileDO);
-
-        return new ResponseDTO().setMsg("请求成功").setStatus(200).setObj(list.get(0).getFileName());
+        list.get(0).toString();
+        return new ResponseDTO().setMsg("请求成功").setStatus(200).setObj(list.get(0));
     }
-
-
-
 
     /**
      * <per>
@@ -72,7 +63,7 @@ public class FileController {
      * @author Liruilong
      * @Date 2020/9/17 19:43
      **/
-    @PostMapping("/upload ")
+    @PostMapping("/upload")
     public Object uploadFile(DefaultMultipartHttpServletRequest request ,HttpServletResponse response) throws JsonProcessingException {
         Object list = fileService.uploadFile(request, response, true);
         String result = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).writeValueAsString(list);
