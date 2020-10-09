@@ -1,11 +1,11 @@
 package com.liruilong.fileserver.common.aop;
 
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.liruilong.fileserver.common.util.DateUtil;
 import com.liruilong.fileserver.common.util.IpUtil;
 import com.liruilong.fileserver.common.util.UUIDUtil;
 import com.liruilong.fileserver.fserve.domain.OperateLog;
-import com.liruilong.fileserver.fserve.service.FileService;
 import com.liruilong.fileserver.fserve.service.OperateLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -21,9 +21,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.concurrent.*;
 
 /**
  * @Auther: Liruilong
@@ -35,30 +34,32 @@ import java.util.Date;
 public class FileLogAspect {
 
     private Logger logger4j = LoggerFactory.getLogger(FileLogAspect.class);
-    private final String POINT_CUT = "com.liruilong.fileserver.common.aop.MethodsLog";
 
+    private  static  ExecutorService executorService = new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+            60L, TimeUnit.SECONDS,
+            new SynchronousQueue<Runnable>());
     @Autowired
     private OperateLogService operateLogService;
 
-    @Pointcut("@annotation(" + POINT_CUT + ")")
+    @Pointcut("@annotation(com.liruilong.fileserver.common.aop.MethodsLog)")
     public void pointCut() {
     }
 
 
     @Before("pointCut()")
     public void doBefore(JoinPoint joinPoint) {
-       new Thread(() -> handleLog(joinPoint, "--->[begin!]",0)).start();
+        new Thread(() -> handleLog(joinPoint, "--->[begin!]", 0),"").start();
     }
 
     @AfterReturning("pointCut()")
     public void doAfterReturning(JoinPoint joinPoint) {
-     new Thread(() -> handleLog(joinPoint, "--->[finish!]",0)).start();
+        new Thread(() -> handleLog(joinPoint, "--->[finish!]", 0)).start();
     }
 
 
     @AfterThrowing(value = "pointCut()", throwing = "errorMsg")
     public void afterThrowException(JoinPoint joinpoint, Exception errorMsg) {
-       new Thread(()-> handleLog(joinpoint, "--->[Exception!]",1)).start();
+        new Thread(() -> handleLog(joinpoint, "--->[Exception!]", 1)).start();
     }
 
 
@@ -87,7 +88,7 @@ public class FileLogAspect {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getName();
         OperateLog operateLog = new OperateLog().setId(UUIDUtil.builder()).setModule(loggerAnnotation.remark())
-                .setRemark(o[0] +":"+ Arrays.toString(joinPoint.getArgs()))
+                .setRemark(o[0] + ":" + Arrays.toString(joinPoint.getArgs()))
                 .setClassName(className).setMethod(methodName).setIp(ipAddr).setOperType(loggerAnnotation.operType().getName())
                 .setCreateTime(DateUtil.builder()).setUserId("123").setUserName("小明").setStatus((Integer) (o[1]));
 
