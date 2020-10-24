@@ -12,6 +12,7 @@ import java.util.Objects;
 import static com.liruilong.fileserver.common.util.interfaceutil.InterfaceUtilMethod.*;
 import static com.liruilong.fileserver.common.util.ziptar.ZipResolveUtil.checkCharset;
 import static org.apache.commons.io.FileUtils.*;
+import static org.apache.commons.io.IOUtils.copyLarge;
 
 
 /**
@@ -71,7 +72,7 @@ public class FileUtil {
         String s = null;
 
         s = exceptionUtil((f) -> {
-            try (InputStream inputStream = o instanceof File ? new FileInputStream((File) f):(InputStream)f) {
+            try (InputStream inputStream = o instanceof File ? new FileInputStream((File) f) : (InputStream) f) {
                 String md5DigestAsHex = DigestUtils.md5DigestAsHex(inputStream);
                 return md5DigestAsHex;
             }
@@ -115,7 +116,7 @@ public class FileUtil {
      * <per>
      * <p>获取文件夹里所有文件及所有子目录内文件<p/>
      * <per/>
-     * @Description
+     * @Description todo Get all files in the folder and all files in subdirectories
      * @author Liruilong
      * @Date 2020年08月12日  17:08:22
      **/
@@ -401,6 +402,34 @@ public class FileUtil {
     }
 
 
+    /**
+     * @param newStyle
+     * @param o
+     * @return
+     * @description TODO File suffix format change 更改文件后缀
+     * @author Liruilong
+     * @date 2020年10月17日  18:10:33
+     **/
+
+    public static void fileToStyle(String newStyle, Object... o) {
+        for (int i = 0; i < o.length; i++) {
+            if (o[i] instanceof String) {
+                o[i] = new File((String) o[i]);
+            } else if (!(o[i] instanceof File)) {
+                continue;
+            }
+            o[i] = (File) o[i];
+            if (((File) o[i]).exists()) {
+                exceptionUtilNo((s) -> {
+                    File file = ((File) o[(Integer) s]);
+                    String newFilePath = file.getParent() + file.getName().substring(0, file.getName().indexOf(".") + 1) + newStyle;
+                    copyLarge(openInputStream(file), openOutputStream(new File(newFilePath)));
+                }, "后缀名转化异常", i);
+            }
+        }
+    }
+
+
     public static void main(String[] args) throws FileNotFoundException {
         // 未使用流  220M未使用流:165   2.4G 未使用流:22996  26.1 GB 未使用流:144
        /* String name1 = "J:\\RHCE8模拟环境";
@@ -431,8 +460,9 @@ public class FileUtil {
         if (false ^ true) {
             System.out.println("有一個為真");
         }
-        fileSizeUtil("");
+        //  fileSizeUtil("C:\\Users\\12249\\Documents\\自定义 Office 模板\\集宁师范学院本科生毕业设计（论文、创作）选题、开题报告.doc集宁师范学院本科生毕业设计（论文、创作）选题、开题报告.doc");
         //System.out.println(getMd5(new File("D:\\新建文件夹\\apache-maven-3.3.9.zip")));
+        fileToStyle("zip", "G:\\IOc.docx");
 
 
     }

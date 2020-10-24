@@ -24,7 +24,7 @@ public class ThreadFactoryUtil {
 
     public static ThreadFactory builder(String ...s){
         if (s.length > 0 && StringUtils.isNotBlank(s[0])){
-            return new ThreadFactoryBuilder().setNameFormat(s[0]+"Pool-%d")
+            return new ThreadFactoryBuilder().setNameFormat(s[0]+"ThreadPool-%d")
                     .build();
         }else {
             return new ThreadFactoryBuilder().setNameFormat("TimerTaskThread-Pool-%d").build();
@@ -32,7 +32,7 @@ public class ThreadFactoryUtil {
     }
 
     public static void main(String[] args) {
-        ExecutorService service = new ThreadPoolExecutor(100,100,0L,
+        ExecutorService service = new ThreadPoolExecutor(1,1,0L,
                 TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>(1024),ThreadFactoryUtil.builder(),new ThreadPoolExecutor.AbortPolicy());
         for (int i = 0; i < 15; i++) {
             service.execute(() ->System.out.println(Thread.currentThread().getName()));

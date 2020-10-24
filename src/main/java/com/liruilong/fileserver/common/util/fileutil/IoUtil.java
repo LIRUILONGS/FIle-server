@@ -3,6 +3,7 @@ package com.liruilong.fileserver.common.util.fileutil;
 
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,20 +24,16 @@ import static org.apache.commons.io.IOUtils.copyLarge;
  */
 public class IoUtil {
 
-    private IoUtil() {
+    private  IoUtil() {
 
     }
 
     /**
-     * <per>
-     * <p>流转化</p>
-     * <per/>
-     *
      * @param input
      * @param Output
      * @return boolean
      * @throws
-     * @Description
+     * @Description TODO Input and output stream conversion
      * @author Liruilong
      * @Date 2020年08月17日  17:08:34
      **/
@@ -45,6 +42,11 @@ public class IoUtil {
                         copyLarge((InputStream) os[0], (OutputStream) os[1])
                 , "流转化异常", input, Output);
     }
+
+
+
+
+
 
     public static String getFileMd5(InputStream fileInputStream) throws IOException {
         if (fileInputStream == null) {

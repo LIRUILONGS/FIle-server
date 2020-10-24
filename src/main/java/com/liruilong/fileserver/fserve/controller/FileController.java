@@ -96,7 +96,7 @@ public class FileController {
     @GetMapping("/seacr")
     @MethodsLog(operType = FileCRUDEnum.QUERY,remark = "根据目录查找文件",paramData = "data")
     public ResponseDTO sea(@RequestParam(defaultValue = "23") int num,@RequestParam(defaultValue = "liruilong") String name){
-      //  System.out.println(12 / 0);
+        System.out.println(12 / 0);
         return    new ResponseDTO().setMsg("请求成功").setStatus(200).setObj("123");
 
 

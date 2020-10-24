@@ -261,6 +261,7 @@ public class ZipResolveUtil {
         char[] passwordArray = new char[]{'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
         System.out.println("Printing String password -> " + passwordString);
         System.out.println("Printing char[] password -> " + passwordArray);
+        zipReadFile(new File("G:\\16-信息与计算科学专业人才培养方案.zip"),"GBK","G:\\");
     }
 
 

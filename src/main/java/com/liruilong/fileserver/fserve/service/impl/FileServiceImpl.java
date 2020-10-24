@@ -110,7 +110,6 @@ public class FileServiceImpl implements FileService {
         // 参数为空校验
         checkoutNull(pathname);
         // 参数格式校验
-
         // 目录分片，判断根目录是否存在。
         String[] dirNameArr = pathname.split(FileContants.SPLIT_SIGN);
         int size = dirNameArr.length;

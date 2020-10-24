@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.logging.Logger;
 
 /**
  * @author Liruilong
@@ -58,7 +59,8 @@ public class OperateLog implements Serializable {
 
     @Override
     public String toString() {
-        return "OperateLog{" +
+        Logger l = Logger.getLogger(OperateLog.class.getCanonicalName());
+        String s = "OperateLog{" +
                 "id='" + id + '\'' +
                 ", userId='" + userId + '\'' +
                 ", userName='" + userName + '\'' +
@@ -71,6 +73,8 @@ public class OperateLog implements Serializable {
                 ", status=" + status +
                 ", createTime=" + createTime +
                 '}';
+        l.info(s);
+        return s;
     }
 
     public String getId() {
